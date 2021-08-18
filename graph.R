@@ -1,0 +1,132 @@
+library(ggplot2)
+library(plyr)
+library(reshape2)
+library(grid)
+library(gridExtra)
+
+rndwr_tp<-read.table("/Users/pboros/blogposts/gp2_gp3/rndwr_tp.df",sep=",",as.is=T,header=F)
+colnames(rndwr_tp)<-c("disk_type","time","benchmark_type","threads","metric","value")
+rndwr_tp$value<-as.numeric(rndwr_tp$value)
+rndwr_tp$time<-as.numeric(rndwr_tp$time)
+
+rndrd_tp<-read.table("/Users/pboros/blogposts/gp2_gp3/rndrd_tp.df",sep=",",as.is=T,header=F)
+colnames(rndrd_tp)<-c("disk_type","time","benchmark_type","threads","metric","value")
+rndrd_tp$value<-as.numeric(rndrd_tp$value)
+rndrd_tp$time<-as.numeric(rndrd_tp$time)
+
+rndrw_tp<-read.table("/Users/pboros/blogposts/gp2_gp3/rndrw_tp.df",sep=",",as.is=T,header=F)
+colnames(rndrw_tp)<-c("disk_type","time","benchmark_type","threads","metric","value")
+rndrw_tp$value<-as.numeric(rndrw_tp$value)
+rndrw_tp$time<-as.numeric(rndrw_tp$time)
+
+rndwr_lat<-read.table("/Users/pboros/blogposts/gp2_gp3/rndwr_lat.df",sep=",",as.is=T,header=F)
+colnames(rndwr_lat)<-c("disk_type","time","benchmark_type","threads","metric","value")
+rndwr_lat$value<-as.numeric(rndwr_lat$value)
+rndwr_lat$time<-as.numeric(rndwr_lat$time)
+
+rndrd_lat<-read.table("/Users/pboros/blogposts/gp2_gp3/rndrd_lat.df",sep=",",as.is=T,header=F)
+colnames(rndrd_lat)<-c("disk_type","time","benchmark_type","threads","metric","value")
+rndrd_lat$value<-as.numeric(rndrd_lat$value)
+rndrd_lat$time<-as.numeric(rndrd_lat$time)
+
+rndrw_lat<-read.table("/Users/pboros/blogposts/gp2_gp3/rndrw_lat.df",sep=",",as.is=T,header=F)
+colnames(rndrw_lat)<-c("disk_type","time","benchmark_type","threads","metric","value")
+rndrw_lat$value<-as.numeric(rndrw_lat$value)
+rndrw_lat$time<-as.numeric(rndrw_lat$time)
+
+# rndwr tp
+rndwr_tp_graph<-ggplot(rndwr_tp)
+rndwr_tp_graph<-rndwr_tp_graph+aes(x=factor(threads),y=value,geom=disk_type,colour=metric)
+rndwr_tp_graph<-rndwr_tp_graph+facet_grid(benchmark_type ~ disk_type)
+rndwr_tp_graph<-rndwr_tp_graph+geom_jitter(alpha=0.3)
+rndwr_tp_graph<-rndwr_tp_graph+expand_limits(y=0)
+rndwr_tp_graph<-rndwr_tp_graph+theme(legend.position="bottom")
+rndwr_tp_graph<-rndwr_tp_graph+xlab("Threads")
+rndwr_tp_graph<-rndwr_tp_graph+ylab("Throughput (MiB/s)")
+rndwr_tp_graph<-rndwr_tp_graph+ggtitle("Sysbench fileio random writes")
+rndwr_tp_graph<-rndwr_tp_graph+theme(legend.key=element_rect(fill="white"))
+rndwr_tp_graph<-rndwr_tp_graph+guides(colour=guide_legend(override.aes=list(alpha=1, fill=NA)))
+rndwr_tp_graph<-rndwr_tp_graph+scale_color_hue(l=55,name="")
+rndwr_tp_graph<-rndwr_tp_graph+theme(axis.text.x = element_text(size = rel(0.8), angle = 45)) 
+rndwr_tp_graph
+
+# rndrd tp
+rndrd_tp_graph<-ggplot(rndrd_tp)
+rndrd_tp_graph<-rndrd_tp_graph+aes(x=factor(threads),y=value,geom=disk_type,colour=metric)
+rndrd_tp_graph<-rndrd_tp_graph+facet_grid(benchmark_type ~ disk_type)
+rndrd_tp_graph<-rndrd_tp_graph+geom_jitter(alpha=0.3)
+rndrd_tp_graph<-rndrd_tp_graph+expand_limits(y=0)
+rndrd_tp_graph<-rndrd_tp_graph+theme(legend.position="bottom")
+rndrd_tp_graph<-rndrd_tp_graph+xlab("Threads")
+rndrd_tp_graph<-rndrd_tp_graph+ylab("Throughput (MiB/s)")
+rndrd_tp_graph<-rndrd_tp_graph+ggtitle("Sysbench fileio random reads")
+rndrd_tp_graph<-rndrd_tp_graph+theme(legend.key=element_rect(fill="white"))
+rndrd_tp_graph<-rndrd_tp_graph+guides(colour=guide_legend(override.aes=list(alpha=1, fill=NA)))
+rndrd_tp_graph<-rndrd_tp_graph+scale_color_hue(l=55,name="")
+rndrd_tp_graph<-rndrd_tp_graph+theme(axis.text.x = element_text(size = rel(0.8), angle = 45)) 
+rndrd_tp_graph
+
+# rndrw tp
+rndrw_tp_graph<-ggplot(rndrw_tp)
+rndrw_tp_graph<-rndrw_tp_graph+aes(x=factor(threads),y=value,geom=disk_type,colour=metric)
+rndrw_tp_graph<-rndrw_tp_graph+facet_grid(benchmark_type ~ disk_type)
+rndrw_tp_graph<-rndrw_tp_graph+geom_jitter(alpha=0.3)
+rndrw_tp_graph<-rndrw_tp_graph+expand_limits(y=0)
+rndrw_tp_graph<-rndrw_tp_graph+theme(legend.position="bottom")
+rndrw_tp_graph<-rndrw_tp_graph+xlab("Threads")
+rndrw_tp_graph<-rndrw_tp_graph+ylab("Throughput (MiB/s)")
+rndrw_tp_graph<-rndrw_tp_graph+ggtitle("Sysbench fileio random mixed reads/writes")
+rndrw_tp_graph<-rndrw_tp_graph+theme(legend.key=element_rect(fill="white"))
+rndrw_tp_graph<-rndrw_tp_graph+guides(colour=guide_legend(override.aes=list(alpha=1, fill=NA)))
+rndrw_tp_graph<-rndrw_tp_graph+scale_color_hue(l=55,name="")
+rndrw_tp_graph<-rndrw_tp_graph+theme(axis.text.x = element_text(size = rel(0.8), angle = 45)) 
+rndrw_tp_graph
+
+# rndwr lat
+rndwr_lat_graph<-ggplot(rndwr_lat)
+rndwr_lat_graph<-rndwr_lat_graph+aes(x=factor(threads),y=value,geom=disk_type,colour=metric)
+rndwr_lat_graph<-rndwr_lat_graph+facet_grid(benchmark_type ~ disk_type)
+rndwr_lat_graph<-rndwr_lat_graph+geom_jitter(alpha=0.3)
+rndwr_lat_graph<-rndwr_lat_graph+expand_limits(y=0)
+rndwr_lat_graph<-rndwr_lat_graph+theme(legend.position="bottom")
+rndwr_lat_graph<-rndwr_lat_graph+xlab("Threads")
+rndwr_lat_graph<-rndwr_lat_graph+ylab("Latency (ms, 95th percentile)")
+rndwr_lat_graph<-rndwr_lat_graph+ggtitle("Sysbench fileio random write latency (ms, 95th percentile)")
+rndwr_lat_graph<-rndwr_lat_graph+theme(legend.key=element_rect(fill="white"))
+rndwr_lat_graph<-rndwr_lat_graph+guides(colour=guide_legend(override.aes=list(alpha=1, fill=NA)))
+rndwr_lat_graph<-rndwr_lat_graph+scale_color_hue(l=55,name="")
+rndwr_lat_graph<-rndwr_lat_graph+theme(axis.text.x = element_text(size = rel(0.8), angle = 45)) 
+rndwr_lat_graph
+
+# rndrd lat
+rndrd_lat_graph<-ggplot(rndrd_lat)
+rndrd_lat_graph<-rndrd_lat_graph+aes(x=factor(threads),y=value,geom=disk_type,colour=metric)
+rndrd_lat_graph<-rndrd_lat_graph+facet_grid(benchmark_type ~ disk_type)
+rndrd_lat_graph<-rndrd_lat_graph+geom_jitter(alpha=0.3)
+rndrd_lat_graph<-rndrd_lat_graph+expand_limits(y=0)
+rndrd_lat_graph<-rndrd_lat_graph+theme(legend.position="bottom")
+rndrd_lat_graph<-rndrd_lat_graph+xlab("Threads")
+rndrd_lat_graph<-rndrd_lat_graph+ylab("Latency (ms, 95th percentile)")
+rndrd_lat_graph<-rndrd_lat_graph+ggtitle("Sysbench fileio random read latency (ms, 95th percentile)")
+rndrd_lat_graph<-rndrd_lat_graph+theme(legend.key=element_rect(fill="white"))
+rndrd_lat_graph<-rndrd_lat_graph+guides(colour=guide_legend(override.aes=list(alpha=1, fill=NA)))
+rndrd_lat_graph<-rndrd_lat_graph+scale_color_hue(l=55,name="")
+rndrd_lat_graph<-rndrd_lat_graph+theme(axis.text.x = element_text(size = rel(0.8), angle = 45)) 
+rndrd_lat_graph
+
+# rndrw lat
+rndrw_lat_graph<-ggplot(rndrw_lat)
+rndrw_lat_graph<-rndrw_lat_graph+aes(x=factor(threads),y=value,geom=disk_type,colour=metric)
+rndrw_lat_graph<-rndrw_lat_graph+facet_grid(benchmark_type ~ disk_type)
+rndrw_lat_graph<-rndrw_lat_graph+geom_jitter(alpha=0.3)
+rndrw_lat_graph<-rndrw_lat_graph+expand_limits(y=0)
+rndrw_lat_graph<-rndrw_lat_graph+theme(legend.position="bottom")
+rndrw_lat_graph<-rndrw_lat_graph+xlab("Threads")
+rndrw_lat_graph<-rndrw_lat_graph+ylab("Latency (ms, 95th percentile)")
+rndrw_lat_graph<-rndrw_lat_graph+ggtitle("Sysbench fileio random mixed read/write latency (ms, 95th percentile)")
+rndrw_lat_graph<-rndrw_lat_graph+theme(legend.key=element_rect(fill="white"))
+rndrw_lat_graph<-rndrw_lat_graph+guides(colour=guide_legend(override.aes=list(alpha=1, fill=NA)))
+rndrw_lat_graph<-rndrw_lat_graph+scale_color_hue(l=55,name="")
+rndrw_lat_graph<-rndrw_lat_graph+theme(axis.text.x = element_text(size = rel(0.8), angle = 45)) 
+rndrw_lat_graph
+
